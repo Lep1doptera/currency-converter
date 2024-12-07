@@ -1,4 +1,5 @@
-import { apiKey } from "./env";
+import { apiKey } from "./env.js";
+
 
 let country_List = {
   AED: "AE",
@@ -167,11 +168,11 @@ const fromCurrency = document.querySelector(".from select");
 const toCurrency = document.querySelector(".to select");
 const getBtn = document.querySelector("form button");
 const amount = document.querySelector("form input");
-const exchangeRateText = document.querySelector("from .exchange-rate");
+const exchangeRateText = document.querySelector(".exchange-rate");
 const exchangeIcon = document.querySelector("form .icon");
 
 for (let i = 0; i < dropList.length; i++) {
-  for (let currency_code in country_list) {
+  for (let currency_code in country_List) {
     let selected =
       i == 0
         ? currency_code == "USD"
@@ -218,17 +219,19 @@ const getExchangeRate = () => {
     .then((response) => response.json())
     .then((result) => {
       let exchangeRate = result.conversion_rates[toCurrency.value];
-      let totalExRate = (amountVal = exchangeRate).toFixed(2);
-      exchangeRate.innerHTML = `${amountVal} ${fromCurrency.value} = ${totalExRate} ${toCurrency.value}`;
+      let totalExRate = (amountVal * exchangeRate).toFixed(2);
+   
+
+      exchangeRateText.innerHTML = `${amountVal} ${fromCurrency.value} = ${totalExRate} ${toCurrency.value}`;
     })
-    .catch(() => {
-      exchangeRateText.innerHTML = "Something went wrong";
+    .catch((error) => {
+      exchangeRateText.innerHTML = `Something went wrong: ${error}`;
     });
 };
 
 //event listeners
 
-windown.addEventListener("load", () => {
+window.addEventListener("load", () => {
   getExchangeRate();
 });
 
